@@ -1,8 +1,9 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const mysql = require("mysql");
 const cors = require("cors");
-const bcrypt = require("bcrypt");
+const { sha3_256 } = require("js-sha3");
 const port = 5001;
 
 const db = mysql.createConnection({
