@@ -4,7 +4,8 @@ const app = express();
 const cors = require("cors");
 const usersRoutes = require("./routes/userRoutes");
 
-const port = 5001;
+const { PORT } = process.env;
+const port = PORT | 5001;
 
 app.use(express.json());
 app.use(cors());
