@@ -3,26 +3,25 @@ const User = require("../models/User");
 
 // register user
 const registerUser = async (req, res) => {
-  // const sqlSelect = "SELECT * FROM users_table WHERE email = ?";
-  // db.query(sqlSelect, [email], (error, result) => {
-  //   if (error) {
-  //     console.log(error);
-  //     return;
-  //   }
-  //   if (result.length > 0) {
-  //     res.send({ success: false, message: "User already exists" });
-  //   } else {
-  //     const sqlInsert =
-  //       "INSERT INTO users_table (name, email, password, reg_time, login_time, status) VALUES (?, ?, ?, ?, ?, ?);";
-  //     const values = [name, email, password, reg_time, login_time, status];
-  //     db.query(sqlInsert, values, error => {
-  //       if (error) {
-  //         console.log(error);
-  //       }
-  //     });
-  //     res.send({ success: true, message: "User registered successfully" });
-  //   }
-  // });
+  const { name, email } = req.body;
+  const password = await bcrypt.hash(req.body.password, 10);
+
+  try {
+    const oldUser = await User.findOne({ email });
+
+    if (oldUser) {
+      return res.send({ success: false, message: "User already exists" });
+    }
+
+    await User.create({
+      name,
+      email,
+      password,
+    });
+    res.send({ success: true, message: "User registered successfully" });
+  } catch (error) {
+    res.send({ success: false, message: "Server error" });
+  }
 };
 
 // login user
@@ -62,6 +61,17 @@ const getUsers = async (req, res) => {
   }
 };
 
+// delete user
+const deleteUser = async (req, res) => {
+  //   const { id } = req.params;
+  //   const sqlRemove = "DELETE FROM users_table WHERE id = ?";
+  //   db.query(sqlRemove, [id], (error, result) => {
+  //     if (error) {
+  //       console.log(error);
+  //     }
+  //   });
+};
+
 // set user status
 const userStatus = async (req, res) => {
   //   const { id } = req.params;
@@ -72,17 +82,6 @@ const userStatus = async (req, res) => {
   //       console.log(error);
   //     }
   //     res.send(status);
-  //   });
-};
-
-// delete user
-const deleteUser = async (req, res) => {
-  //   const { id } = req.params;
-  //   const sqlRemove = "DELETE FROM users_table WHERE id = ?";
-  //   db.query(sqlRemove, [id], (error, result) => {
-  //     if (error) {
-  //       console.log(error);
-  //     }
   //   });
 };
 
