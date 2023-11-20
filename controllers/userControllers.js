@@ -29,29 +29,27 @@ const registerUser = async (req, res) => {
 
 // login user
 const loginUser = async (req, res) => {
-  // const { email, password, login_time } = req.body;
-  // const sqlSelect = "SELECT * FROM users_table WHERE email = ?";
-  // const sqlUpdate = "UPDATE users_table SET login_time = ? WHERE email = ?";
-  // db.query(sqlSelect, [email], async (error, result) => {
-  //   if (error) {
-  //     console.log(error);
-  //     return;
-  //   }
-  //   if (result.length > 0) {
-  //     if (await bcrypt.compare(password, result[0].password)) {
-  //       db.query(sqlUpdate, [login_time, email], (error, result) => {
-  //         if (error) {
-  //           console.log(error);
-  //         }
-  //       });
-  //       res.send({ success: true });
-  //     } else {
-  //       res.send({ success: false, message: "Invalid Password" });
-  //     }
-  //   } else {
-  //     res.send({ success: false, message: "User does not exists" });
-  //   }
-  // });
+  const { email, password, login_time } = req.body;
+
+  try {
+    const oldUser = await User.findOne({ email });
+
+    if (!oldUser) {
+      return res.send({ success: false, message: "User not found" })
+    }
+
+    if (bcrypt.compare(password, oldUser.password)) {
+      if (res.status(201)) {
+        return res.send({ success: true, message: "User logged in succesfully" })
+      } else {
+        return res.send({ success: false, message: "User does not exists" })
+      }
+    }
+    res.send({ success: "error", message: "Invalid Password" })
+
+  } catch (error) {
+    res.send({ success: false, message: "Server error" })
+  }
 };
 
 // get users from database
