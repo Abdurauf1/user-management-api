@@ -8,6 +8,9 @@
   "repository": "https://github.com/Abdurauf1/registration-login-api.git",
   "author": "Abdurauf <aabdurauf004@gmail.com>",
   "license": "MIT",
+  "engines": {
+    "node": ">=16.20.1"
+  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
