@@ -3,7 +3,7 @@ const User = require("../models/User");
 
 // register user
 const registerUser = async (req, res) => {
-  const { name, email } = req.body;
+  const { name, email, reg_time, login_time, activityStatus } = req.body;
   const password = await bcrypt.hash(req.body.password, 10);
 
   try {
@@ -17,6 +17,9 @@ const registerUser = async (req, res) => {
       name,
       email,
       password,
+      reg_time,
+      login_time,
+      activityStatus,
     });
     res.send({ success: true, message: "User registered successfully" });
   } catch (error) {
