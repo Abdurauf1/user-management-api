@@ -57,20 +57,20 @@ const getUsers = async (req, res) => {
   try {
     const users = await User.find({});
     res.send(users);
-  } catch (err) {
-    console.error("Error fetching users:", err);
+  } catch (error) {
+    console.error("Error fetching users:", error);
   }
 };
 
 // delete user
 const deleteUser = async (req, res) => {
-  //   const { id } = req.params;
-  //   const sqlRemove = "DELETE FROM users_table WHERE id = ?";
-  //   db.query(sqlRemove, [id], (error, result) => {
-  //     if (error) {
-  //       console.log(error);
-  //     }
-  //   });
+  // try {
+  //   const { email } = req.params;
+  //   const user = User.findOne({ email });
+  //   User.deleteOne(user)
+  // } catch (error) {
+  //   console.log(error);
+  // }
 };
 
 // set user status
