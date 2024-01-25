@@ -44,6 +44,9 @@ const loginUser = async (req, res) => {
       return res.send({ success: false, message: "Invalid Password" })
     }
 
+    user.login_time = login_time;
+    user.save()
+
     const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY);
     if (res.status(200)) {
       return res.send({ success: true, data: token, message: "User logged in succesfully" })
