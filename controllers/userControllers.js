@@ -38,16 +38,16 @@ const loginUser = async (req, res) => {
       return res.send({ success: false, message: "User not found" })
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password)
+    const isPasswordValid = bcrypt.compareSync(password, user.password)
 
     if (!isPasswordValid) {
       return res.send({ success: false, message: "Invalid Password" })
     }
 
     user.login_time = login_time;
-    user.save()
+    user.save();
 
-    const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY);
+    const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY);
     if (res.status(200)) {
       return res.send({ success: true, data: token, message: "User logged in succesfully" })
     }
@@ -68,13 +68,13 @@ const getUsers = async (req, res) => {
 
 // delete user
 const deleteUser = async (req, res) => {
-  // try {
-  //   const { email } = req.params;
-  //   const user = User.findOne({ email });
-  //   User.deleteOne(user)
-  // } catch (error) {
-  //   console.log(error);
-  // }
+  try {
+    const { id } = req.params;
+    const deletedUser = await User.findOneAndDelete(id)
+    res.send({ data: deletedUser, success: true, message: "User deleted succesfully" })
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 // set user status
