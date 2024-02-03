@@ -68,26 +68,27 @@ const getUsers = async (req, res) => {
 
 // delete user
 const deleteUser = async (req, res) => {
-  // try {
-  //   const { id } = req.params;
-  //   const deletedUser = await User.findOneAndDelete(id)
-  //   res.send({ data: deletedUser, success: true, message: "User deleted succesfully" })
-  // } catch (error) {
-  //   console.log(error);
-  // }
+  try {
+    const { id } = req.params;
+    await User.findOneAndDelete(id)
+    res.send({ success: true, message: "User deleted succesfully" })
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 // set user status
 const userStatus = async (req, res) => {
-  //   const { id } = req.params;
-  //   const { status } = req.body;
-  //   const sqlUpdate = "UPDATE users_table SET status = ? WHERE id = ?";
-  //   db.query(sqlUpdate, [status, id], (error, result) => {
-  //     if (error) {
-  //       console.log(error);
-  //     }
-  //     res.send(status);
-  //   });
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const user = await User.findOneAndUpdate(id)
+    user.activityStatus = status
+    user.save()
+    res.send({ success: true })
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 module.exports = {
