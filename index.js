@@ -8,7 +8,10 @@ const db = require("./database/db");
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    credentials: true,
+    optionsSuccessStatus: 200
+}));
 app.use("/api", usersRoutes);
 
 app.listen(process.env.PORT, () => {
