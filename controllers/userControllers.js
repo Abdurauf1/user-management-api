@@ -47,7 +47,7 @@ const loginUser = async (req, res) => {
     user.login_time = login_time;
     user.save();
 
-    const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY);
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY);
     if (res.status(200)) {
       return res.send({ success: true, data: token, message: "User logged in succesfully" })
     }
@@ -62,7 +62,7 @@ const getUsers = async (req, res) => {
     const users = await User.find({});
     res.send(users);
   } catch (error) {
-    console.error("Error fetching users:", error);
+    console.log("Error fetching users:", error);
   }
 };
 
