@@ -2,6 +2,11 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken")
 
+// ping
+const pingRoute = (req, res) => {
+  res.status(200).send("OK")
+}
+
 // register user
 const registerUser = async (req, res) => {
   const { name, email, reg_time, login_time, activityStatus } = req.body;
@@ -92,6 +97,7 @@ const userStatus = async (req, res) => {
 };
 
 module.exports = {
+  pingRoute,
   deleteUser,
   getUsers,
   registerUser,
