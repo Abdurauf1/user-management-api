@@ -22,6 +22,7 @@ const registerUser = async (req, res) => {
       login_time,
       activityStatus,
     });
+
     res.send({ success: true, message: "User registered successfully" });
   } catch (error) {
     res.send({ success: false, message: "Server error" });
@@ -44,10 +45,14 @@ const loginUser = async (req, res) => {
       return res.send({ success: false, message: "Invalid Password" })
     }
 
+    if (user.activityStatus === "blocked") {
+      return res.send({ success: false, message: "User is blocked by someone" })
+    }
+
     user.login_time = login_time;
     user.save();
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY);
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, { expiresIn: "1d" });
     if (res.status(200)) {
       return res.send({ success: true, data: token, message: "User logged in succesfully" })
     }
@@ -55,6 +60,16 @@ const loginUser = async (req, res) => {
     res.send({ success: false, message: "Server error" })
   }
 };
+
+// get user profile
+const getProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select("-password")
+    res.send(user)
+  } catch (error) {
+    res.send({ success: false, message: "Server error" })
+  }
+}
 
 // get users from database
 const getUsers = async (req, res) => {
@@ -70,7 +85,7 @@ const getUsers = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
-    await User.findOneAndDelete(id)
+    await User.findOneAndDelete({ _id: id })
     res.send({ success: true, message: "User deleted succesfully" })
   } catch (error) {
     console.log(error);
@@ -81,17 +96,18 @@ const deleteUser = async (req, res) => {
 const userStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    const { status } = req.body;
-    const user = await User.findOneAndUpdate(id)
-    user.activityStatus = status
+    const { activityStatus } = req.body;
+    const user = await User.findOneAndUpdate({ _id: id })
+    user.activityStatus = activityStatus
     user.save()
-    res.send({ success: true })
+    res.send({ success: true, user })
   } catch (error) {
     console.log(error);
   }
 };
 
 module.exports = {
+  getProfile,
   deleteUser,
   getUsers,
   registerUser,
